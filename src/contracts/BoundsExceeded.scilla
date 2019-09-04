@@ -1,0 +1,84 @@
+(* This contract receives out-of-bounds events from a server and records them *)
+(* on the blockchain. *)
+scilla_version 0
+
+library BoundsExceeded
+
+let one_msg =
+    fun (msg : Message) =>
+    let nil_msg = Nil {Message} in
+    Cons {Message} msg nil_msg
+
+(* The contract has the following parameters: *)
+(* owner - the address of the contract owner *)
+(* fine  - the fine that the contract pays to `payee` after `maxCount` *)
+(*         out-of-bounds events, example: `Uint128 1000000000000` *)
+(* payee - the address of the recipient of the fine, example: *)
+(*         `0x1234567890123456789012345678901234567890` *)
+(* maxCount - the number of out-of-bounds events that do not trigger a fine *)
+contract BoundsExceeded
+(
+    owner: ByStr20,
+    fine: Uint128,
+    payee: ByStr20,
+    maxCount: Uint32
+)
+
+field count: Uint32 = Uint32 0
+field fined: Bool = False
+
+(* `incrementCount` increments the incidence count of out-of-bounds events *)
+(* and, if that count is greater than `maxCount` and `fine` has not been *)
+(* paid yet, pays `fine` to `payee`. *)
+transition incrementCount()
+    one = Uint32 1;
+    old <- count;
+    new = builtin add old one;
+    count := new;
+    nonCritical = builtin lt new maxCount;
+    match nonCritical with
+    | True =>
+        msg = {
+            _tag: "";
+            _recipient: owner;
+            _amount: Uint128 0
+        };
+        msgs = one_msg msg;
+        send msgs
+    | False =>
+        finedCopy <- fined;
+        match finedCopy with
+        | True =>
+            msg = {
+                _tag: "";
+                _recipient: _sender;
+                _amount: Uint128 0;
+                note: "already fined"
+            }
+            msgs = one_msg msg;
+            send msgs
+        | False =>
+            t = True;
+            fined := t;
+            msg = {
+                _tag: "";
+                _recipient: payee;
+                _amount: fine
+            };
+            msgs = one_msg msg;
+            send msgs
+        end
+    end
+end
+
+transition getCount()
+    countCopy <- count;
+    msg = {
+        _tag: "";
+        _recipient: _sender;
+        _amount: Uint128 0;
+        count: countCopy
+    };
+    msgs = one_msg msg;
+    send msgs
+end
