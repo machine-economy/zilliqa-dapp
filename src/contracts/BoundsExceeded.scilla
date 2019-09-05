@@ -5,80 +5,112 @@ scilla_version 0
 library BoundsExceeded
 
 let one_msg =
-    fun (msg : Message) =>
-    let nil_msg = Nil {Message} in
-    Cons {Message} msg nil_msg
+  fun (msg : Message) =>
+  let nil_msg = Nil {Message} in
+  Cons {Message} msg nil_msg
+
+let one = Uint32 1
+let not_owner_code = Int32 1
+let non_critical_event_code = Int32 2
+let penalty_paid_code = Int32 3
+let oob_event_code = Int32 4
 
 (* The contract has the following parameters: *)
-(* owner - the address of the contract owner *)
-(* fine  - the fine that the contract pays to `payee` after `maxCount` *)
-(*         out-of-bounds events, example: `Uint128 1000000000000` *)
-(* payee - the address of the recipient of the fine, example: *)
-(*         `0x1234567890123456789012345678901234567890` *)
-(* maxCount - the number of out-of-bounds events that do not trigger a fine *)
+(* owner         - the address of the contract owner *)
+(* payee         - the address of the recipient of the penalty, example: *)
+(*                 `0x1234567890123456789012345678901234567890` *)
+(* penaltyAmount - the penalty that the contract pays to `payee` after *)
+(*                 `maxCount` out-of-bounds events, example: *)
+(*                 `Uint128 1000000000000` *)
+(* penaltyThreshold - the number of the out-of-bounds event that triggers a fine *)
 contract BoundsExceeded
 (
-    owner: ByStr20,
-    fine: Uint128,
-    payee: ByStr20,
-    maxCount: Uint32
+  owner: ByStr20,
+  payee: ByStr20,
+  penaltyAmount: Uint128,
+  penaltyThreshold: Uint32
 )
 
 field count: Uint32 = Uint32 0
-field fined: Bool = False
+field penaltyPaid: Bool = False
 
-(* `incrementCount` increments the incidence count of out-of-bounds events *)
-(* and, if that count is greater than `maxCount` and `fine` has not been *)
-(* paid yet, pays `fine` to `payee`. *)
-transition incrementCount()
-    one = Uint32 1;
-    old <- count;
-    new = builtin add old one;
-    count := new;
-    nonCritical = builtin lt new maxCount;
-    match nonCritical with
-    | True =>
-        msg = {
-            _tag: "";
-            _recipient: owner;
-            _amount: Uint128 0
-        };
-        msgs = one_msg msg;
-        send msgs
-    | False =>
-        finedCopy <- fined;
-        match finedCopy with
-        | True =>
-            msg = {
-                _tag: "";
-                _recipient: _sender;
-                _amount: Uint128 0;
-                note: "already fined"
-            }
-            msgs = one_msg msg;
-            send msgs
-        | False =>
-            t = True;
-            fined := t;
-            msg = {
-                _tag: "";
-                _recipient: payee;
-                _amount: fine
-            };
-            msgs = one_msg msg;
-            send msgs
-        end
-    end
-end
+(* DEBUG *)
+field debug_msg : String = "[debug-init]"
 
-transition getCount()
-    countCopy <- count;
+(* `oobEvent` increments the incidence count of out-of-bounds events *)
+(* and, if that count is greater than `penaltyThreshold` and `penaltyAmount` *)
+(* has not been paid yet, pays `penaltyAmount` to `payee`. *)
+transition oobEvent()
+  old <- count;
+  new = builtin add old one;
+  count := new;
+  nonCritical = builtin lt new penaltyThreshold;
+  match nonCritical with
+  | True =>
     msg = {
-        _tag: "";
-        _recipient: _sender;
-        _amount: Uint128 0;
-        count: countCopy
+      _tag: "";
+      _recipient: owner;
+      _amount: Uint128 0;
+      code: non_critical_event_code
     };
     msgs = one_msg msg;
     send msgs
+  | False =>
+    penaltyPaidCopy <- penaltyPaid;
+    match penaltyPaidCopy with
+    | True =>
+      msg = {
+        _tag: "";
+        _recipient: _sender;
+        _amount: Uint128 0;
+        code: penalty_paid_code
+      };
+      msgs = one_msg msg;
+      send msgs
+    | False =>
+      t = True;
+      penaltyPaid := t;
+      msg = {
+        _tag: "";
+        _recipient: payee;
+        _amount: penaltyAmount
+      };
+      msgs = one_msg msg;
+      send msgs
+    end
+  end
+end
+
+transition getCount()
+  countCopy <- count;
+  msg = {
+    _tag: "";
+    _recipient: _sender;
+    _amount: Uint128 0;
+    count: countCopy
+  };
+  msgs = one_msg msg;
+  send msgs
+end
+
+(* DEBUG *)
+transition getDebug()
+  r <- debug_msg;
+  e = {_eventname: "getDebug()"; msg: r};
+  event e
+end
+
+(* DEBUG *)
+transition multipleMsgs()
+  msg1 = {_tag : ""; _recipient : _sender; _amount : Uint128 0};
+  msg2 = {_tag : ""; _recipient : _sender; _amount : Uint128 0};
+  msgs1 = one_msg msg1;
+  msgs2 = Cons {Message} msg2 msgs1;
+  send msgs2
+end
+
+(* DEBUG *)
+transition contractAddress()
+  e = {_eventname : "ContractAddress"; addr : _this_address};
+  event e
 end
