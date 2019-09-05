@@ -1,0 +1,15 @@
+language:
+  - python
+
+python:
+  - 3.6
+
+install:
+  - pip install pytest pytest-cov python-coveralls pyzil
+
+script:
+  - pytest
+  - coveralls
+
+notifications:
+  email: false
