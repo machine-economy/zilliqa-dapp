@@ -1,0 +1,66 @@
+scilla_version 0
+
+(* me_ex1_oob_loc contract *)
+(* Copyright (c) 2019 Well Bred Software Limited *)
+
+(***************************************************)
+(*               Associated library                *)
+(***************************************************)
+import ListUtils
+
+
+library ME_EX1_OOB_LOC
+
+let one_msg =
+  fun (msg : Message) =>
+  let nil_msg = Nil {Message} in
+  Cons {Message} msg nil_msg
+
+let not_owner_code = Int32 1
+let oob_event_code = Int32 4
+
+
+(***************************************************)
+(*             The contract definition             *)
+(***************************************************)
+
+contract ME_EX1_OOB_LOC
+(
+  owner: ByStr20,
+  payee: ByStr20,
+  penaltyThreshold: Uint32,
+  penaltyAmount: Uint128
+)
+
+field debug_msg : String = "[debug-init]"
+field oob_count : Uint32 = Uint32 0
+field oobPenaltyApplied: Bool = False
+
+transition oobEvent(event_type : String, asset_name : String)
+  one = Uint32 1;
+  old <- oob_count;
+  new = builtin add old one;
+  oob_count := new;
+
+  e = {_eventname : "oobEvent()"; code : oob_event_code};
+  event e
+end
+
+transition getDebug()
+    r <- debug_msg;
+    e = {_eventname: "getDebug()"; msg: r};
+    event e
+end
+
+transition multipleMsgs()
+  msg1 = {_tag : ""; _recipient : _sender; _amount : Uint128 0};
+  msg2 = {_tag : ""; _recipient : _sender; _amount : Uint128 0};
+  msgs1 = one_msg msg1;
+  msgs2 = Cons {Message} msg2 msgs1;
+  send msgs2
+end
+
+transition contrAddr()
+  msg1 = {_eventname : "ContractAddress"; addr : _this_address };
+  event msg1
+end
