@@ -12,13 +12,14 @@
 
 
 __TOOL = "zil_01.py"
-__VERSION = "0.2.0-b20"
+__VERSION = "0.2.1-b21"
 __DESC = "Initial github release"
 
 from pyzil.zilliqa import chain
 from pyzil.account import Account
 from pyzil.contract import Contract
-from src.config import Config
+#from src.config import Config
+from src.config.config import Config
 
 
 debug_on = True

@@ -19,14 +19,13 @@ __DESC = "Initial github release"
 
 import sys
 import time
-import zil_01
+import src.zil_01 as zil_01
 
 
 if __name__ == '__main__':
     print("%s (%s-%s)" % (__TOOL, __VERSION, __DESC))
 
-filename = "src/me_ex1_oob_loc.scilla"
-filename = "src/me_tmp_01.scilla"
+filename = "src/contracts/me_ex1_oob_loc.scilla"
 
 if len(sys.argv) > 1:
     filename = sys.argv[1]
