@@ -1,2 +1,4 @@
-pyzil
 pytest
+pytest-cov
+python-coveralls
+pyzil
