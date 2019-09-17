@@ -1,0 +1,3 @@
+[submodule "kaya"]
+	path = kaya
+	url = git@github.com:machine-economy/kaya.git

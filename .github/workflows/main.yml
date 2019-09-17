@@ -28,3 +28,17 @@ jobs:
       run: |
         pip install pytest
         pytest
+    - name: Set up Node.js 8
+      uses: actions/setup-node@v1
+      with:
+        node-version: '8.x'
+    - name: Build Kaya
+      run: |
+        cd kaya
+        npm install --ignore-scripts
+        npm rebuild
+    # FIXME: Get the account addresses and private keys from Kaya
+    - name: Run Kaya
+      run: |
+        npm run start
+    # FIXME: Develop and run tests against the above instance of Kaya
