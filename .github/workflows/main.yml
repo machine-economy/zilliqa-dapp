@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: |
-        actions/checkout@v1
-        actions/checkout-submodules
+    - uses: actions/checkout@v1
+    - name: Get submodules
+      run: git submodule update --init --recursive
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
@@ -37,11 +37,12 @@ jobs:
     - name: Build Kaya
       run: |
         cd kaya
+	# Install but don't run post-installation scripts for increased security.
         npm install --ignore-scripts
         npm rebuild
-    # FIXME: Get the account addresses and private keys from Kaya
+    # FIXME: Get the account addresses and private keys from Kaya.
     - name: Run Kaya
       run: |
         cd kaya
         npm run start
-    # FIXME: Develop and run tests against the above instance of Kaya
+    # FIXME: Develop and run tests against the above instance of Kaya.
