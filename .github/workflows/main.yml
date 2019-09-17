@@ -40,5 +40,6 @@ jobs:
     # FIXME: Get the account addresses and private keys from Kaya
     - name: Run Kaya
       run: |
+        cd kaya
         npm run start
     # FIXME: Develop and run tests against the above instance of Kaya
