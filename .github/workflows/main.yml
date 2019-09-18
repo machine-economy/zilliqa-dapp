@@ -36,13 +36,12 @@ jobs:
         node-version: '8.x'
     - name: Build Kaya
       run: |
-        cd kaya
+        cd test/mock/kaya
         # Install but don't run post-installation scripts for increased security.
         npm install --ignore-scripts
         npm rebuild
-    # FIXME: Get the account addresses and private keys from Kaya.
-    - name: Run Kaya
+    - name: Run mock tests
       run: |
-        cd kaya
-        npm run start
-    # FIXME: Develop and run tests against the above instance of Kaya.
+        cd test/mock
+        npm install
+        npm test
