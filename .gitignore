@@ -127,4 +127,4 @@ venv.bak/
 *.swp
 
 # NPM files
-/node_modules/
+node_modules/

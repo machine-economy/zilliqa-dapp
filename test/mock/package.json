@@ -1,8 +1,8 @@
 {
-    "name": "zilliqa-dapp-mock-test",
+    "name": "zilliqa-dapp-mock-zilliqa",
     "author": "Vladimir Komendantskiy",
     "version": "0.0.1",
-    "description": "Mock tests using Kaya for the Zilliqa Dapp",
+    "description": "Mock Zilliqa server for local tests",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -10,12 +10,11 @@
     },
     "main": "index.js",
     "scripts": {
-        "test": "node_modules/.bin/mocha -- --bail --timeout 300000"
+        "start": "bash src/start.sh",
+        "stop": "bash src/stop.sh"
     },
     "dependencies": {
         "chai": "^4.2.0",
-        "chai-as-promised": "^7.1.1",
-        "chai-bn": "^0.1.1",
-        "mocha": "^6.2.0"
+        "chai-as-promised": "^7.1.1"
     }
 }
