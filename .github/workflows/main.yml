@@ -1,4 +1,4 @@
-name: Python application
+name: Machine Economy Zilliqa Dapp
 
 on: [push]
 
@@ -40,8 +40,15 @@ jobs:
         # Install but don't run post-installation scripts for increased security.
         npm install --ignore-scripts
         npm rebuild
-    - name: Run mock tests
+    - name: Start Kaya
       run: |
         cd test/mock
         npm install
-        npm test
+        npm run start
+    #
+    # FIXME: Port Python tests from testnet to Kaya and run them here.
+    #
+    - name: Stop Kaya
+      run: |
+        cd test/mock
+        npm run stop
