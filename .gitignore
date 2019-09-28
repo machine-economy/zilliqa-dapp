@@ -128,3 +128,6 @@ venv.bak/
 
 # NPM files
 node_modules/
+
+# runtime directories
+runtime-data/
