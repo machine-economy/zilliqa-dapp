@@ -17,8 +17,10 @@ let one_msg =
   Cons {Message} msg nil_msg
 
 let not_owner_code = Int32 1
+let set_hello_code = Int32 2
+let reset_hello_code = Int32 3
 let oob_event_code = Int32 4
-
+let get_debug_code = Int32 5
 
 (***************************************************)
 (*             The contract definition             *)
@@ -41,9 +43,51 @@ transition oobEvent(event_type : String, asset_name : String)
   old <- oob_count;
   new = builtin add old one;
   oob_count := new;
-
-  e = {_eventname : "oobEvent()"; code : oob_event_code};
-  event e
+  (*  [** Add test that sender is on approved list **] *)
+  is_owner = builtin eq owner _sender;
+  match is_owner with
+  | False =>
+    e = {_eventname : "oobEvent()"; code : not_owner_code};
+    event e
+  | True =>
+    msg1 = builtin concat event_type asset_name;
+    debug_msg := msg1;
+    belowThreshold = builtin lt new penaltyThreshold;
+    match belowThreshold with
+    | True =>
+        msg = {
+            _tag: "";
+            _recipient: owner;
+            _amount: Uint128 0
+        };
+        msgs = one_msg msg;
+        send msgs
+    | False =>
+        oobPenaltyApplied_l <- oobPenaltyApplied;
+        match oobPenaltyApplied_l with
+        | True =>
+            msg = {
+                _tag: "";
+                _recipient: _sender;
+                _amount: Uint128 0;
+                note: "Already fined"
+            }
+        | False =>
+            t = True;
+            oobPenaltyApplied := t;
+            msg = {
+                _tag: "";
+                _recipient: payee;
+                _amount: penaltyAmount;
+                note: "OutOfBoundsThreshold Exceeded"
+            };
+            msgs = one_msg msg;
+            send msgs
+        end
+    end;
+    e = {_eventname : "oobEvent()"; code : oob_event_code};
+    event e
+  end
 end
 
 transition getDebug()
