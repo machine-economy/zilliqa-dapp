@@ -178,6 +178,7 @@ def process_next_location(t,point,polygon):
 
 def main(argv=None):
     """Example app for exercising Zil_01 class."""
+    global filename
     global bounds
     global threads
 
