@@ -11,9 +11,10 @@ import ListUtils
 
 library ME_EX1_OOB_LOC
 
+let nil_msg = Nil {Message}
+
 let one_msg =
   fun (msg : Message) =>
-  let nil_msg = Nil {Message} in
   Cons {Message} msg nil_msg
 
 let not_owner_code = Int32 1
@@ -34,21 +35,26 @@ contract ME_EX1_OOB_LOC
   penaltyAmount: Uint128
 )
 
-field debug_msg : String = "[debug-init]"
-field oob_count : Uint32 = Uint32 0
+field debug_msg: String = "[debug-init]"
+field oob_count: Uint32 = Uint32 0
 field oobPenaltyApplied: Bool = False
 
-transition oobEvent(event_type : String, asset_name : String)
+transition receiveOobEvent(event_type : String, asset_name : String)
   one = Uint32 1;
   old <- oob_count;
   new = builtin add old one;
   oob_count := new;
+  log_msg = {
+    _tag: "logOobEvent";
+    _recipient: _this_address;
+    _amount: Uint128 0
+  };
+  msgs1 = one_msg log_msg;
   (*  [** Add test that sender is on approved list **] *)
   is_owner = builtin eq owner _sender;
   match is_owner with
   | False =>
-    e = {_eventname : "oobEvent()"; code : not_owner_code};
-    event e
+    send msgs1
   | True =>
     msg1 = builtin concat event_type asset_name;
     debug_msg := msg1;
@@ -56,44 +62,49 @@ transition oobEvent(event_type : String, asset_name : String)
     match belowThreshold with
     | True =>
         msg = {
-            _tag: "";
-            _recipient: owner;
-            _amount: Uint128 0
+          _tag: "";
+          _recipient: owner;
+          _amount: Uint128 0
         };
-        msgs = one_msg msg;
-        send msgs
+        msgs2 = Cons {Message} msg msgs1;
+        send msgs2
     | False =>
         oobPenaltyApplied_l <- oobPenaltyApplied;
         match oobPenaltyApplied_l with
         | True =>
             msg = {
-                _tag: "";
-                _recipient: _sender;
-                _amount: Uint128 0;
-                note: "Already fined"
-            }
+              _tag: "";
+              _recipient: _sender;
+              _amount: Uint128 0;
+              note: "Already fined"
+            };
+            msgs2 = Cons {Message} msg msgs1;
+            send msgs2
         | False =>
             t = True;
             oobPenaltyApplied := t;
             msg = {
-                _tag: "";
-                _recipient: payee;
-                _amount: penaltyAmount;
-                note: "OutOfBoundsThreshold Exceeded"
+              _tag: "";
+              _recipient: payee;
+              _amount: penaltyAmount;
+              note: "OutOfBoundsThreshold Exceeded"
             };
-            msgs = one_msg msg;
-            send msgs
+            msgs2 = Cons {Message} msg msgs1;
+            send msgs2
         end
-    end;
-    e = {_eventname : "oobEvent()"; code : oob_event_code};
-    event e
+    end
   end
 end
 
+transition logOobEvent()
+  e = {_eventname: "oobEvent"; code: oob_event_code};
+  event e
+end
+
 transition getDebug()
-    r <- debug_msg;
-    e = {_eventname: "getDebug()"; msg: r};
-    event e
+  r <- debug_msg;
+  e = {_eventname: "getDebug()"; msg: r};
+  event e
 end
 
 transition multipleMsgs()

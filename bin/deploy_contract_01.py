@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #******************************************************************************
 #* Filename:            deploy_contract_01.py
-#* Last Updated:        2019-09-26
+#* Last Updated:        2019-09-30
 #* Status:              Prototype
 #* Description:         Basic script to assist in contract deployment
 #* Project:             Zilliqa dApp Project
@@ -14,10 +14,14 @@
 #  cd 
 
 __TOOL = "deploy_contract_01.py"
-__VERSION = "0.2.3-b26"
+__VERSION = "0.2.4-b27"
 __DESC = "Refactored into main(); Added payee_account setup in init params"
 
+#  Fix-up the path to the 'root' directory ...
+import os
 import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import time
 import src.zil_01 as zil_01
 from pyzil.contract import Contract
@@ -25,7 +29,7 @@ from pyzil.account import Account
 
 
 filename = "src/me_tmp_01.scilla"
-filename = "src/me_ex1_oob_loc.scilla"
+filename = "src/contracts/me_ex1_oob_loc.scilla"
 
 def main(argv):
     global filename
@@ -71,10 +75,10 @@ def main(argv):
         Contract.value_dict("penaltyAmount", "Uint128", "10"),
     ]
     
-    return
     contract, status = zil.compile_and_deploy(filename, init_params=init_params)
     end_deploy = time.time()
     print(f"Ending deployment at: {time.ctime(end_deploy)}  Duration: {end_deploy - start_deploy}s")
+    print(f"contract.address: {contract.address}")
     
     print(f"Outcome: Status: {status}   Contract: {contract}")
     
