@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # deploy_contract_01.py
-# Zilliqa dApp Project - Machine Economy
-# Copyright (c) 2019  Well Bred Software Limited (on behalf of DX3 Core)
-# MIT License [TBC]
+# Zilliqa dapp Project - Machine Economy
+# Copyright (c) 2019  Well Bred Software Limited and Rustiq Technology Limited
+# This code is licensed under the MIT license (see LICENSE for terms).
 
-# Contract deployment tool - deploys contract to Zilliqa network.
-# 
-# Uses: zil_01 module, pyzil module
+"""
+deploy_contract_01.py
+Contract deployment tool - deploys contract to Zilliqa network.
+
+Usage:
+  deploy_contract_01.py [contract_filename]
+
+Modules used: pyzil, zil_01
+"""
 
 
-#  Fix-up the path to the 'root' directory ...
+#  Fix-up the path to the 'root' directory (one level up from this script) ...
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -23,7 +29,7 @@ from src.config.config import Config
 
 
 __TOOL = "deploy_contract_01.py"
-__VERSION = "0.2.5-b30"
+__VERSION = "0.2.6-b35"
 __DESC = "Refactored into main(); Added payee_account setup in init params"
 
 

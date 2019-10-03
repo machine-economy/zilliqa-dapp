@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Zilliqa dApp Project - Machine Economy
-# Copyright (c) 2019  Well Bred Software Limited (on behalf of DX3 Core)
-# MIT License [TBC]
+# testgen_loc_player.py
+# Zilliqa dapp Project - Machine Economy
+# Copyright (c) 2019  Well Bred Software Limited and Rustiq Technology Limited
+# This code is licensed under the MIT license (see LICENSE for terms).
 
-# Location test player - replays test data sequence from csv file and generates
-# out-of-bounds events to Zilliqa network.
-# 
-# Uses: zil_01 module, pyzil module
+"""
+testgen_loc_player.py
+Location test player - replays test data sequence from csv file and generates
+out-of-bounds events to Zilliqa network.
+
+Usage:
+  testgen_loc_player.py [csv_data_filename]
+
+Modules used: pyzil, zil_01
+"""
 
 
 #  Fix-up the path to the 'root' directory ...
@@ -20,19 +27,22 @@ import time
 import csv
 import threading
 import copy
-
-import src.zil_01 as zil_01
-
 from pyzil.contract import Contract
 from pyzil.zilliqa.chain import active_chain
 
+import src.zil_01 as zil_01
+
 
 __TOOL = "testgen_loc_player.py"
-__VERSION = "0.2.2-b25"
-__DESC = "New location test player - first release"
+__VERSION = "0.2.6-b35"
+__DESC = "First release"
 
 debugOn = True
 debugOn = False
+
+
+#  Default data file to load ...
+filename = "data/location_test_data_output.csv"
 
 
 def get_data(data_filename):
@@ -171,13 +181,15 @@ def main(argv=None):
     global bounds
     global threads
 
-    output_file = "data/location_test_data_output.csv"
-
+    #  Get contract filename from cli params, if present ...
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+    
     #  Get the bounds object ...
     bounds = LocationBounds()
 
     #  Load the data table ...
-    file_data = get_data(output_file)
+    file_data = get_data(filename)
     if len(file_data) > 1:
         output_data = file_data[1:]
 
@@ -188,7 +200,7 @@ def main(argv=None):
     next_time = start_time
     print(f"output_data[0]: {output_data[0]}")
     point = (float(output_data[0][1]), float(output_data[0][2]), float(output_data[0][3]))
-    polygon = int(output_data[0][4]) if not output_data[0][4] is "None" else None
+    polygon = int(output_data[0][4]) if output_data[0][4] == "None" else None
     in_bounds = not polygon is None
     #  Process the initial point ...
     print(f"start_time, point, polygon: {start_time, point, polygon}")

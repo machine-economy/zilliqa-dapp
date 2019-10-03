@@ -1,13 +1,13 @@
-#******************************************************************************
-#* Filename:            config.py
-#* Last Updated:        2019-09-26
-#* Status:              Prototype
-#* Description:         Config data for zil_01 object
-#* Project:             Zilliqa dApp Project
-#******************************************************************************
-#*     Copyright (c) 2019 Well Bred Software Limited (on behalf of DX3 Core)
-#*                           All rights reserved
-#******************************************************************************
+# -*- coding: utf-8 -*-
+# config.py
+# Zilliqa dapp Project - Machine Economy
+# Copyright (c) 2019  Well Bred Software Limited and Rustiq Technology Limited
+# This code is licensed under the MIT license (see LICENSE for terms).
+
+"""
+config.py
+zil_01 - configuration data - account keys, etc.
+"""
 
 
 class Config(object):
