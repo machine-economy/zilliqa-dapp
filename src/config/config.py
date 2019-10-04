@@ -12,7 +12,7 @@ zil_01 - configuration data - account keys, etc.
 
 class Config(object):
     #
-    #'''
+    '''
     #  Default account definitions ...
     #  ... update this with your account details.
     #default_account_address = '123456789abcdef0123456789abcdef012345668'
@@ -29,7 +29,7 @@ class Config(object):
     #
     #
     #  Default contract defn ...
-    #default_contract_address = 'ccc1234567890123456789012345678901234567'
+    #default_contract_address = '45dca9586598c8af78b191eaa28daf2b0a0b4f43'
     default_contract_address = None
     '''
     #
@@ -49,4 +49,4 @@ class Config(object):
     #
     #  Default contract defn ...
     default_contract_address = None
-    '''
+    #default_contract_address = '45dca9586598c8af78b191eaa28daf2b0a0b4f43'

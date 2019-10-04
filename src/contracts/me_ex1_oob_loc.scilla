@@ -1,7 +1,10 @@
 scilla_version 0
 
 (* me_ex1_oob_loc contract *)
-(* Copyright (c) 2019 Well Bred Software Limited *)
+(* Zilliqa dapp Project - Machine Economy *)
+(* Copyright (c) 2019 Well Bred Software Limited and Rustiq Technology Limited *)
+(* This code is licensed under the MIT license *)
+(* Version: 2019-10-04T09:00:00 *)
 
 (***************************************************)
 (*               Associated library                *)
@@ -18,8 +21,6 @@ let one_msg =
   Cons {Message} msg nil_msg
 
 let not_owner_code = Int32 1
-let set_hello_code = Int32 2
-let reset_hello_code = Int32 3
 let oob_event_code = Int32 4
 let get_debug_code = Int32 5
 
