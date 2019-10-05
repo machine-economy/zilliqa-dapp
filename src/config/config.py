@@ -36,7 +36,7 @@ class Config(object):
     # ******      Working Data       *****
     #
     default_account_address = 'b50b61ecb98683083ad80f45bde5d15ea5ab745b'
-    keystore_file = 'data/accounts/test_0001_keystore.json'
+    keystore_file = 'data/accounts/test_account_1.json'
     keystore_passphrase = 'test account 0001 passphrase'
     #
     #

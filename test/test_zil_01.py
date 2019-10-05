@@ -11,7 +11,7 @@ Performs basic tests on the zil_01 module.
 """
 
 __TOOL = "test_zil_01.py"
-__VERSION = "0.2.6-b35"
+__VERSION = "0.2.6-b36"
 __DESC = ""
 
 
@@ -67,7 +67,7 @@ def test_1_Zil_01():
         account = Account(address=account_address)
     else:
         #  Get account from keystore data ...
-        keystore_file = "data/accounts/test_0001_keystore.json"
+        keystore_file = "data/accounts/accounts.json"
         keystore_pwd = "test account 0001 passphrase"
         account = Account.from_keystore(keystore_pwd, keystore_file)
     print("Account:", account)

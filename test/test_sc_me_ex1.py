@@ -11,7 +11,7 @@ Performs basic tests on the smart contract.
 """
 
 __TOOL = "test_sc_me_ex1.py"
-__VERSION = "0.2.6-b35"
+__VERSION = "0.2.6-b36"
 __DESC = ""
 
 
@@ -47,7 +47,7 @@ def setup_zil():
     if account_address:
         account = Account(address=account_address)
     else:
-        keystore_file = "data/accounts/test_0001_keystore.json"
+        keystore_file = "data/accounts/test_account_1.json"
         keystore_pwd = "test account 0001 passphrase"
         account = Account.from_keystore(keystore_pwd, keystore_file)
     print("Account:", account)
