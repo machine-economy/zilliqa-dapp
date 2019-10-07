@@ -8,8 +8,8 @@ install:
   - pip install pytest pytest-cov python-coveralls pyzil
 
 script:
-  - pytest
-  - coveralls
+  - py.test --cov
+  #- coveralls
 
 notifications:
   email: false
