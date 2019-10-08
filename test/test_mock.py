@@ -12,12 +12,12 @@ logging.getLogger().setLevel(logging.DEBUG)
 # Test the mock accounts.
 def test_mock_accounts():
     # There are 10 initial accounts by default.
-    assert len(accountPrivateKeys) is 10
+    len(accountPrivateKeys) == 10
     for acc in accountPrivateKeys:
         # Every account number is a 20-byte hex string.
-        assert len(acc) is 40
+        len(acc) == 40
         accn = int(acc, 16)
         # Every secret key is a 32-byte hex string.
         key = accountPrivateKeys[acc]
-        assert len(key) is 64
+        len(key) == 64
         keyn = int(key, 16)
