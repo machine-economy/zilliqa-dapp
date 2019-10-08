@@ -1,0 +1,3 @@
+[submodule "kaya"]
+	path = test/mock/kaya
+	url = https://github.com/machine-economy/kaya.git

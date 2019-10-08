@@ -1,6 +1,6 @@
 # Industrial machine economy dapp
 
-| `master` | `dev` |
+| [`master`](https://github.com/machine-economy/zilliqa-dapp/tree/master) | [`dev`](https://github.com/machine-economy/zilliqa-dapp/tree/dev) |
 | --- | --- |
 | [![build_status](https://travis-ci.org/machine-economy/zilliqa-dapp.svg?branch=master)](https://travis-ci.org/machine-economy/zilliqa-dapp) | [![build_status](https://travis-ci.org/machine-economy/zilliqa-dapp.svg?branch=dev)](https://travis-ci.org/machine-economy/zilliqa-dapp) |
 

@@ -1,0 +1,20 @@
+{
+    "name": "zilliqa-dapp-mock-zilliqa",
+    "author": "Vladimir Komendantskiy",
+    "version": "0.0.1",
+    "description": "Mock Zilliqa server for local tests",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/machine-economy/zilliqa-dapp"
+    },
+    "main": "index.js",
+    "scripts": {
+        "start": "bash src/start.sh",
+        "stop": "bash src/stop.sh"
+    },
+    "dependencies": {
+        "chai": "^4.2.0",
+        "chai-as-promised": "^7.1.1"
+    }
+}

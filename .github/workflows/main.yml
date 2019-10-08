@@ -1,4 +1,4 @@
-name: Python application
+name: Machine Economy Zilliqa Dapp
 
 on: [push]
 
@@ -9,6 +9,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: Get submodules
+      run: git submodule update --init --recursive
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
@@ -24,7 +26,26 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Set up Node.js 8
+      uses: actions/setup-node@v1
+      with:
+        node-version: '8.x'
+    - name: Build Kaya
+      run: |
+        cd test/mock/kaya
+        # Install but don't run post-installation scripts for increased security.
+        npm install --ignore-scripts
+        npm rebuild
+    - name: Start Kaya
+      run: |
+        cd test/mock
+        npm install
+        npm run start
     - name: Test with pytest
       run: |
         pip install pytest
         pytest
+    - name: Stop Kaya
+      run: |
+        cd test/mock
+        npm run stop
